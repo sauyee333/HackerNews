@@ -1,0 +1,23 @@
+ext.deps = [:]
+
+//all version numbers
+def versions = [:]
+versions.android_gradle_plugin = "2.3.3"
+versions.kotlin = "1.2.0"
+
+//gradle build tool
+deps.android_gradle_plugin = "com.android.tools.build:gradle:$versions.android_gradle_plugin"
+
+//build
+def build_deps = [:]
+build_deps.compile_sdk = 25
+build_deps.min_sdk = 14
+build_deps.target_sdk = 22
+build_deps.build_tools = "25.0.2"
+ext.build_deps = build_deps
+
+//kotlin
+def kotlin = [:]
+kotlin.plugin = "org.jetbrains.kotlin:kotlin-gradle-plugin:$versions.kotlin"
+deps.kotlin = kotlin
+
