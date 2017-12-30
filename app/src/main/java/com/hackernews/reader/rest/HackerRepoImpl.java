@@ -31,6 +31,12 @@ public class HackerRepoImpl implements HackerRepository {
 
     @NotNull
     @Override
+    public Observable<Story> getHackerStory(String story) {
+        return hackerNewsRestInterface.getHackerStory(story);
+    }
+
+    @NotNull
+    @Override
     public Observable<List<Story>> showHackerStory() {
         return Observable.defer(new Func0<Observable<List<Story>>>() {
             @Override

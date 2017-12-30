@@ -33,7 +33,7 @@ class MainActivity : AppCompatActivity(), NewsInterface.NewsView {
         (newsPresenter as NewsInterface.Presenter).attachView(this)
 
         textButton.setOnClickListener({
-            getStory2()
+            getTopStories()
         })
     }
 
@@ -44,7 +44,7 @@ class MainActivity : AppCompatActivity(), NewsInterface.NewsView {
         super.onDestroy()
     }
 
-    private fun getStory2() {
+    private fun getTopStories() {
         Injection.provideHackerRepository().getHackerTopStories()
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
@@ -57,6 +57,28 @@ class MainActivity : AppCompatActivity(), NewsInterface.NewsView {
                     }
 
                     override fun onNext(storyList: List<String>) {
+                        for (storyId in storyList) {
+                            getStoryDetails(storyId)
+                        }
+                    }
+                });
+    }
+
+    private fun getStoryDetails(story: String) {
+        Injection.provideHackerRepository().getHackerStory(story)
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(object : Subscriber<Story>() {
+                    override fun onCompleted() {
+                    }
+
+                    override fun onError(e: Throwable) {
+                        e.printStackTrace()
+                    }
+
+                    override fun onNext(story: Story) {
+//                        _Debug("getStoryDetails")
+//                        _Debug("story: " + story.toString())
                     }
                 });
     }
