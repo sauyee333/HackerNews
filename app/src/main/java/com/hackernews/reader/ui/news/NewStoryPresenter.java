@@ -4,6 +4,7 @@ import com.hackernews.reader.rest.HackerRepository;
 import com.hackernews.reader.rest.model.Story;
 import com.hackernews.reader.ui.base.GenericPresenter;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import rx.Scheduler;
@@ -23,14 +24,11 @@ public class NewStoryPresenter extends GenericPresenter<NewsInterface.NewsView> 
         this.mainScheduler = mainScheduler;
     }
 
-    @Override
-    public void getTopStories() {
-        checkViewAttached();
-        getView().showLoading();
-        addSubscription(hackerRepository.showHackerStory()
+    private void addSingStorySubscription(String storyId, final List<Story> stories, final int total) {
+        addSubscription(hackerRepository.getHackerStory(storyId)
                 .subscribeOn(ioScheduler)
                 .observeOn(mainScheduler)
-                .subscribe(new Subscriber<List<Story>>() {
+                .subscribe(new Subscriber<Story>() {
                     @Override
                     public void onCompleted() {
                     }
@@ -42,10 +40,46 @@ public class NewStoryPresenter extends GenericPresenter<NewsInterface.NewsView> 
                     }
 
                     @Override
-                    public void onNext(List<Story> storyList) {
-                        getView().hideLoading();
-                        getView().showNewsList(storyList);
+                    public void onNext(Story story) {
+                        stories.add(story);
+                        if (stories.size() >= total) {
+                            getView().hideLoading();
+                            getView().showNewsList(stories);
+                        }
                     }
                 }));
+    }
+
+    private void addTopStoriesSubscription() {
+        addSubscription(hackerRepository.getHackerTopStories()
+                .subscribeOn(ioScheduler)
+                .observeOn(mainScheduler)
+                .subscribe(new Subscriber<List<String>>() {
+                    @Override
+                    public void onCompleted() {
+                    }
+
+                    @Override
+                    public void onError(Throwable throwable) {
+                        getView().hideLoading();
+                        getView().showError(throwable.getMessage());
+                    }
+
+                    @Override
+                    public void onNext(List<String> storyList) {
+                        List<Story> stories = new ArrayList<>();
+                        for (String storyId : storyList) {
+                            addSingStorySubscription(storyId, stories, storyList.size());
+                        }
+                    }
+                }));
+    }
+
+
+    @Override
+    public void getTopStories() {
+        checkViewAttached();
+        getView().showLoading();
+        addTopStoriesSubscription();
     }
 }

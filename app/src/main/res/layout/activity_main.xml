@@ -7,14 +7,17 @@
     tools:context="com.hackernews.reader.MainActivity">
 
     <android.support.v7.widget.RecyclerView
+        android:id="@+id/recyclerView"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content" />
+        android:layout_height="wrap_content"
+        tools:listitem="@layout/list_item_stories"/>
 
     <TextView
-        android:id="@+id/textButton"
+        android:id="@+id/textview_error_message"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Hello Hacker News!" />
+        android:text="click me!"
+        tools:text="Connection Error" />
 
     <ProgressBar
         android:visibility="gone"
