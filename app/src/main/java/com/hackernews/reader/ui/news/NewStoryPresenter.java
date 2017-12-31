@@ -14,7 +14,7 @@ import rx.Subscriber;
  * Created by sauyee on 29/12/17.
  */
 
-public class NewStoryPresenter extends GenericPresenter<NewsInterface.NewsView> implements NewsInterface.Presenter {
+public class NewStoryPresenter extends GenericPresenter<NewsInterface.NewsView> implements NewsInterface.StoryPresenter {
     private final Scheduler ioScheduler, mainScheduler;
     private HackerRepository hackerRepository;
 
@@ -24,7 +24,7 @@ public class NewStoryPresenter extends GenericPresenter<NewsInterface.NewsView> 
         this.mainScheduler = mainScheduler;
     }
 
-    private void addSingStorySubscription(String storyId, final List<Story> stories, final int total) {
+    private void addSingleStorySubscription(String storyId, final List<Story> stories, final int total) {
         addSubscription(hackerRepository.getHackerStory(storyId)
                 .subscribeOn(ioScheduler)
                 .observeOn(mainScheduler)
@@ -69,17 +69,47 @@ public class NewStoryPresenter extends GenericPresenter<NewsInterface.NewsView> 
                     public void onNext(List<String> storyList) {
                         List<Story> stories = new ArrayList<>();
                         for (String storyId : storyList) {
-                            addSingStorySubscription(storyId, stories, storyList.size());
+                            addSingleStorySubscription(storyId, stories, storyList.size());
                         }
                     }
                 }));
     }
 
+    private void addHackerNewsSubscription() {
+        final List<Story> stories = new ArrayList<>();
+
+        addSubscription(hackerRepository.showHackerStory()
+                .subscribeOn(ioScheduler)
+                .observeOn(mainScheduler)
+                .subscribe(new Subscriber<List<Story>>() {
+                    @Override
+                    public void onCompleted() {
+                        getView().hideLoading();
+                        if (stories.size() > 0) {
+                            getView().showNewsList(stories);
+                        }
+                    }
+
+                    @Override
+                    public void onError(Throwable throwable) {
+                        getView().hideLoading();
+                        getView().showError(throwable.getMessage());
+                    }
+
+                    @Override
+                    public void onNext(List<Story> storyList) {
+                        if (storyList != null && storyList.size() > 0) {
+                            stories.add(storyList.get(0));
+                        }
+                    }
+                }));
+    }
 
     @Override
     public void getTopStories() {
         checkViewAttached();
         getView().showLoading();
-        addTopStoriesSubscription();
+//        addTopStoriesSubscription();
+        addHackerNewsSubscription();
     }
 }

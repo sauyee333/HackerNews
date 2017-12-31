@@ -25,7 +25,7 @@ class MainActivity : AppCompatActivity(), NewsInterface.NewsView {
 
     private val mCompositeSubscription = CompositeSubscription()
     private var mGetStorySub: Subscription? = null
-    private var mNewsPresenter: NewsInterface.Presenter? = null
+    private var mNewsPresenter: NewsInterface.StoryPresenter? = null
     private var mNewsStoriesAdapter: NewsStoriesAdapter? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -34,7 +34,7 @@ class MainActivity : AppCompatActivity(), NewsInterface.NewsView {
 
         mNewsPresenter = NewStoryPresenter(Injection.provideHackerRepository(),
                 Schedulers.io(), AndroidSchedulers.mainThread())
-        (mNewsPresenter as NewsInterface.Presenter).attachView(this)
+        (mNewsPresenter as NewsInterface.StoryPresenter).attachView(this)
 
         mNewsStoriesAdapter = NewsStoriesAdapter(null, this)
         recyclerView.layoutManager = LinearLayoutManager(this)
@@ -95,22 +95,22 @@ class MainActivity : AppCompatActivity(), NewsInterface.NewsView {
                 });
     }
 
-    private fun getStory() {
-        Injection.provideHackerRepository().showHackerStory()
-                .subscribeOn(Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(object : Subscriber<List<Story>>() {
-                    override fun onCompleted() {
-                    }
-
-                    override fun onError(e: Throwable) {
-                        e.printStackTrace()
-                    }
-
-                    override fun onNext(storyList: List<Story>) {
-                    }
-                });
-    }
+//    private fun getStory() {
+//        Injection.provideHackerRepository().showHackerStory()
+//                .subscribeOn(Schedulers.io())
+//                .observeOn(AndroidSchedulers.mainThread())
+//                .subscribe(object : Subscriber<List<Story>>() {
+//                    override fun onCompleted() {
+//                    }
+//
+//                    override fun onError(e: Throwable) {
+//                        e.printStackTrace()
+//                    }
+//
+//                    override fun onNext(storyList: List<Story>) {
+//                    }
+//                });
+//    }
 
     override fun showNewsList(storyList: MutableList<Story>?) {
         recyclerView.visibility = View.VISIBLE
@@ -135,6 +135,6 @@ class MainActivity : AppCompatActivity(), NewsInterface.NewsView {
     override fun hideLoading() {
         progress_bar.visibility = View.GONE
         recyclerView.visibility = View.VISIBLE
-        textview_error_message.visibility = View. GONE
+        textview_error_message.visibility = View.GONE
     }
 }

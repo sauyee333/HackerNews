@@ -8,7 +8,7 @@ data class Story(
         val by: String, //f2n
         val descendants: Int, //194
         val id: Int, //16002068
-        val kids: List<Int>,
+        val kids: List<Int> ?,
         val score: Int, //348
         val time: Int, //1514162766
         val title: String, //NVIDIA GeForce driver deployment in datacenters is forbidden now

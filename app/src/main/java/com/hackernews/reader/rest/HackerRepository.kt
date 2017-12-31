@@ -1,5 +1,6 @@
 package com.hackernews.reader.rest
 
+import com.hackernews.reader.rest.model.Comments
 import com.hackernews.reader.rest.model.Story
 import rx.Observable
 
@@ -9,7 +10,7 @@ import rx.Observable
 interface HackerRepository {
     fun showHackerStory(): Observable<List<Story>>
 
-
     fun getHackerTopStories(): Observable<List<String>>
     fun getHackerStory(story: String): Observable<Story>
+    fun getHackerComment(commentId: String): Observable<Comments>
 }

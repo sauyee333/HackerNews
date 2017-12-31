@@ -11,6 +11,7 @@ import com.hackernews.reader.R;
  */
 
 public class NewsViewHolder extends RecyclerView.ViewHolder {
+    final View itemView;
     final TextView textview_item_number;
     final TextView textview_story_title;
     final TextView textview_url;
@@ -21,6 +22,7 @@ public class NewsViewHolder extends RecyclerView.ViewHolder {
 
     public NewsViewHolder(View itemView) {
         super(itemView);
+        this.itemView = itemView;
         textview_item_number = (TextView) itemView.findViewById(R.id.textview_item_number);
         textview_story_title = (TextView) itemView.findViewById(R.id.textview_story_title);
         textview_url = (TextView) itemView.findViewById(R.id.textview_url);

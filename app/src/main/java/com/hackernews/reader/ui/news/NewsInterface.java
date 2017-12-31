@@ -21,7 +21,11 @@ public class NewsInterface {
         void hideLoading();
     }
 
-    public interface Presenter extends BasePresenter<NewsView> {
+    public interface StoryPresenter extends BasePresenter<NewsView> {
         void getTopStories();
+    }
+
+    public interface CommentPresenter extends BasePresenter<NewsView> {
+        void getStoryComments(String commentId);
     }
 }
