@@ -7,9 +7,10 @@ import android.support.v7.app.AppCompatActivity
 import android.support.v7.widget.LinearLayoutManager
 import android.view.View
 import com.hackernews.reader.injection.Injection
+import com.hackernews.reader.rest.model.Comments
 import com.hackernews.reader.rest.model.Story
 import com.hackernews.reader.ui.news.NewsInterface
-import com.hackernews.reader.ui.news.NewsStoriesAdapter
+import com.hackernews.reader.ui.news.NewsStoryAdapter
 import com.hackernews.reader.ui.news.NewsStoryPresenter
 import kotlinx.android.synthetic.main.activity_main.*
 import rx.Subscriber
@@ -26,7 +27,7 @@ class MainActivity : AppCompatActivity(), NewsInterface.NewsView {
     private val mCompositeSubscription = CompositeSubscription()
     private var mGetStorySub: Subscription? = null
     private var mNewsPresenter: NewsInterface.StoryPresenter? = null
-    private var mNewsStoriesAdapter: NewsStoriesAdapter? = null
+    private var mNewsStoriesAdapter: NewsStoryAdapter? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -34,9 +35,9 @@ class MainActivity : AppCompatActivity(), NewsInterface.NewsView {
 
         mNewsPresenter = NewsStoryPresenter(Injection.provideHackerRepository(),
                 Schedulers.io(), AndroidSchedulers.mainThread())
-        (mNewsPresenter as NewsInterface.StoryPresenter).attachView(this)
+        mNewsPresenter?.attachView(this)
 
-        mNewsStoriesAdapter = NewsStoriesAdapter(null, this, this)
+        mNewsStoriesAdapter = NewsStoryAdapter(null, this, this)
         recyclerView.layoutManager = LinearLayoutManager(this)
         recyclerView.adapter = mNewsStoriesAdapter
 
@@ -136,6 +137,9 @@ class MainActivity : AppCompatActivity(), NewsInterface.NewsView {
         progress_bar.visibility = View.GONE
         recyclerView.visibility = View.VISIBLE
         textview_error_message.visibility = View.GONE
+    }
+
+    override fun showCommentList(commentsList: MutableList<Comments>?) {
     }
 
     override fun onStorySelected(commentList: MutableList<Int>?) {

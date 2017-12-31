@@ -15,26 +15,26 @@ import java.util.List;
  * Created by sauyee on 31/12/17.
  */
 
-public class NewsStoriesAdapter extends RecyclerView.Adapter<NewsViewHolder> {
+public class NewsStoryAdapter extends RecyclerView.Adapter<NewsStoryHolder> {
     private List<Story> items;
     private final Context context;
     private NewsInterface.NewsView listener;
 
-    public NewsStoriesAdapter(List<Story> items, Context context, NewsInterface.NewsView listener) {
+    public NewsStoryAdapter(List<Story> items, Context context, NewsInterface.NewsView listener) {
         this.items = items;
         this.context = context;
         this.listener = listener;
     }
 
     @Override
-    public NewsViewHolder onCreateViewHolder(ViewGroup parent, int viewtype) {
+    public NewsStoryHolder onCreateViewHolder(ViewGroup parent, int viewtype) {
         View view = LayoutInflater.from(parent.getContext())
                 .inflate(R.layout.list_item_stories, parent, false);
-        return new NewsViewHolder(view);
+        return new NewsStoryHolder(view);
     }
 
     @Override
-    public void onBindViewHolder(NewsViewHolder holder, int position) {
+    public void onBindViewHolder(NewsStoryHolder holder, int position) {
         final Story item = items.get(position);
         holder.textview_item_number.setText(Integer.toString(position + 1));
         holder.textview_story_title.setText(item.getTitle());

@@ -10,7 +10,7 @@ import com.hackernews.reader.R;
  * Created by sauyee on 31/12/17.
  */
 
-public class NewsViewHolder extends RecyclerView.ViewHolder {
+public class NewsStoryHolder extends RecyclerView.ViewHolder {
     final View itemView;
     final TextView textview_item_number;
     final TextView textview_story_title;
@@ -20,7 +20,7 @@ public class NewsViewHolder extends RecyclerView.ViewHolder {
     final TextView textview_post_time;
     final TextView textview_comments_count;
 
-    public NewsViewHolder(View itemView) {
+    public NewsStoryHolder(View itemView) {
         super(itemView);
         this.itemView = itemView;
         textview_item_number = (TextView) itemView.findViewById(R.id.textview_item_number);

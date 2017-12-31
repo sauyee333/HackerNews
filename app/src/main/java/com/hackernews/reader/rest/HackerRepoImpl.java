@@ -147,6 +147,6 @@ public class HackerRepoImpl implements HackerRepository {
     @NotNull
     @Override
     public Observable<Comments> getHackerComment(String commentId) {
-        return Observable.just(null);
+        return hackerNewsRestInterface.getHackerComments(commentId);
     }
 }

@@ -1,5 +1,6 @@
 package com.hackernews.reader.ui.news;
 
+import com.hackernews.reader.rest.model.Comments;
 import com.hackernews.reader.rest.model.Story;
 import com.hackernews.reader.ui.base.BasePresenter;
 import com.hackernews.reader.ui.base.BaseView;
@@ -20,6 +21,8 @@ public class NewsInterface {
 
         void hideLoading();
 
+        void showCommentList(List<Comments> commentsList);
+
         void onStorySelected(List<Integer> commentList);
     }
 
@@ -28,6 +31,6 @@ public class NewsInterface {
     }
 
     public interface CommentPresenter extends BasePresenter<NewsView> {
-        void getStoryComments(String commentId);
+        void getStoryComments(List<String> commentList);
     }
 }

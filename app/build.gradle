@@ -45,6 +45,7 @@ dependencies {
     compile deps.rxbinding
     compile deps.stetho.core
     compile deps.stetho.okhttp
+    compile deps.tree_adapter
 
     androidTestCompile deps.atsl.runner
 
@@ -53,4 +54,5 @@ dependencies {
     testCompile deps.mockito.core
     testCompile deps.powermock.junit
     testCompile deps.powermock.mockito
+
 }
