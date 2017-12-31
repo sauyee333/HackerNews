@@ -18,10 +18,12 @@ import java.util.List;
 public class NewsStoriesAdapter extends RecyclerView.Adapter<NewsViewHolder> {
     private List<Story> items;
     private final Context context;
+    private NewsInterface.NewsView listener;
 
-    public NewsStoriesAdapter(List<Story> items, Context context) {
+    public NewsStoriesAdapter(List<Story> items, Context context, NewsInterface.NewsView listener) {
         this.items = items;
         this.context = context;
+        this.listener = listener;
     }
 
     @Override
@@ -33,7 +35,7 @@ public class NewsStoriesAdapter extends RecyclerView.Adapter<NewsViewHolder> {
 
     @Override
     public void onBindViewHolder(NewsViewHolder holder, int position) {
-        Story item = items.get(position);
+        final Story item = items.get(position);
         holder.textview_item_number.setText(Integer.toString(position + 1));
         holder.textview_story_title.setText(item.getTitle());
         holder.textview_url.setText(item.getUrl());
@@ -50,6 +52,14 @@ public class NewsStoriesAdapter extends RecyclerView.Adapter<NewsViewHolder> {
                 holder.textview_comments_count.setVisibility(View.GONE);
             }
         }
+        holder.itemView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if (listener != null) {
+                    listener.onStorySelected(item.getKids());
+                }
+            }
+        });
     }
 
     @Override

@@ -19,6 +19,8 @@ public class NewsInterface {
         void showLoading();
 
         void hideLoading();
+
+        void onStorySelected(List<Integer> commentList);
     }
 
     public interface StoryPresenter extends BasePresenter<NewsView> {

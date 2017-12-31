@@ -8,9 +8,9 @@ import android.support.v7.widget.LinearLayoutManager
 import android.view.View
 import com.hackernews.reader.injection.Injection
 import com.hackernews.reader.rest.model.Story
-import com.hackernews.reader.ui.news.NewStoryPresenter
 import com.hackernews.reader.ui.news.NewsInterface
 import com.hackernews.reader.ui.news.NewsStoriesAdapter
+import com.hackernews.reader.ui.news.NewsStoryPresenter
 import kotlinx.android.synthetic.main.activity_main.*
 import rx.Subscriber
 import rx.Subscription
@@ -32,11 +32,11 @@ class MainActivity : AppCompatActivity(), NewsInterface.NewsView {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
-        mNewsPresenter = NewStoryPresenter(Injection.provideHackerRepository(),
+        mNewsPresenter = NewsStoryPresenter(Injection.provideHackerRepository(),
                 Schedulers.io(), AndroidSchedulers.mainThread())
         (mNewsPresenter as NewsInterface.StoryPresenter).attachView(this)
 
-        mNewsStoriesAdapter = NewsStoriesAdapter(null, this)
+        mNewsStoriesAdapter = NewsStoriesAdapter(null, this, this)
         recyclerView.layoutManager = LinearLayoutManager(this)
         recyclerView.adapter = mNewsStoriesAdapter
 
@@ -136,5 +136,9 @@ class MainActivity : AppCompatActivity(), NewsInterface.NewsView {
         progress_bar.visibility = View.GONE
         recyclerView.visibility = View.VISIBLE
         textview_error_message.visibility = View.GONE
+    }
+
+    override fun onStorySelected(commentList: MutableList<Int>?) {
+//        _Debug("onStorySelected " + commentList?.size)
     }
 }

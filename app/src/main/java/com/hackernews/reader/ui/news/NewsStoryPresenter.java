@@ -14,11 +14,11 @@ import rx.Subscriber;
  * Created by sauyee on 29/12/17.
  */
 
-public class NewStoryPresenter extends GenericPresenter<NewsInterface.NewsView> implements NewsInterface.StoryPresenter {
+public class NewsStoryPresenter extends GenericPresenter<NewsInterface.NewsView> implements NewsInterface.StoryPresenter {
     private final Scheduler ioScheduler, mainScheduler;
     private HackerRepository hackerRepository;
 
-    public NewStoryPresenter(HackerRepository hackerRepository, Scheduler ioScheduler, Scheduler mainScheduler) {
+    public NewsStoryPresenter(HackerRepository hackerRepository, Scheduler ioScheduler, Scheduler mainScheduler) {
         this.hackerRepository = hackerRepository;
         this.ioScheduler = ioScheduler;
         this.mainScheduler = mainScheduler;
@@ -109,7 +109,7 @@ public class NewStoryPresenter extends GenericPresenter<NewsInterface.NewsView> 
     public void getTopStories() {
         checkViewAttached();
         getView().showLoading();
-//        addTopStoriesSubscription();
-        addHackerNewsSubscription();
+        addTopStoriesSubscription();
+//        addHackerNewsSubscription();
     }
 }
