@@ -42,7 +42,7 @@ public class NewsStoryAdapter extends RecyclerView.Adapter<NewsStoryHolder> {
         holder.textview_score.setText(item.getScore() + " " + context.getString(R.string.points));
         holder.textview_username.setText(item.getBy());
 //        holder.textview_post_time.setText(item.getTime());
-        List<Integer> commentList = item.getKids();
+        List<String> commentList = item.getKids();
         if (commentList != null) {
             int commentSize = commentList.size();
             if (commentSize > 0) {

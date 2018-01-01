@@ -23,7 +23,7 @@ public class NewsInterface {
 
         void showCommentList(List<Comments> commentsList);
 
-        void onStorySelected(List<Integer> commentList);
+        void onStorySelected(List<String> commentList);
     }
 
     public interface StoryPresenter extends BasePresenter<NewsView> {

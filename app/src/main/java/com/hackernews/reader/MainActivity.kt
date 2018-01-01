@@ -2,6 +2,7 @@ package com.hackernews.reader
 
 import android.app.Activity
 import android.content.Context
+import android.content.Intent
 import android.os.Bundle
 import android.support.v7.app.AppCompatActivity
 import android.support.v7.widget.LinearLayoutManager
@@ -18,8 +19,12 @@ import rx.Subscription
 import rx.android.schedulers.AndroidSchedulers
 import rx.schedulers.Schedulers
 import rx.subscriptions.CompositeSubscription
+import java.util.*
 
+
+//class MainActivity : AppCompatActivity(), NewsInterface.NewsView, SwipeRefreshLayout.OnRefreshListener {
 class MainActivity : AppCompatActivity(), NewsInterface.NewsView {
+
 
     private lateinit var mContext: Context
     private lateinit var mActivity: Activity
@@ -32,6 +37,7 @@ class MainActivity : AppCompatActivity(), NewsInterface.NewsView {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
+        mContext = this
 
         mNewsPresenter = NewsStoryPresenter(Injection.provideHackerRepository(),
                 Schedulers.io(), AndroidSchedulers.mainThread())
@@ -142,7 +148,20 @@ class MainActivity : AppCompatActivity(), NewsInterface.NewsView {
     override fun showCommentList(commentsList: MutableList<Comments>?) {
     }
 
-    override fun onStorySelected(commentList: MutableList<Int>?) {
-//        _Debug("onStorySelected " + commentList?.size)
+    override fun onStorySelected(commentList: MutableList<String>?) {
+        val bundle = Bundle()
+
+        bundle.putStringArrayList("commentList", commentList as ArrayList<String>)
+
+        val intent: Intent
+        intent = Intent(mContext, CommentActivity::class.java)
+        intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK
+        intent.putExtras(bundle)
+        mContext.startActivity(intent)
     }
+
+//    override fun onRefresh() {
+//        _Debug("onRefresh ---")
+//        getTopStories()
+//    }
 }
