@@ -8,6 +8,7 @@ import android.support.v7.app.AppCompatActivity
 import android.support.v7.widget.LinearLayoutManager
 import android.view.View
 import com.hackernews.reader.injection.Injection
+import com.hackernews.reader.rest.model.CommentContent
 import com.hackernews.reader.rest.model.Comments
 import com.hackernews.reader.rest.model.Story
 import com.hackernews.reader.ui.news.NewsInterface
@@ -24,7 +25,6 @@ import java.util.*
 
 //class MainActivity : AppCompatActivity(), NewsInterface.NewsView, SwipeRefreshLayout.OnRefreshListener {
 class MainActivity : AppCompatActivity(), NewsInterface.NewsView {
-
 
     private lateinit var mContext: Context
     private lateinit var mActivity: Activity
@@ -158,6 +158,9 @@ class MainActivity : AppCompatActivity(), NewsInterface.NewsView {
         intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK
         intent.putExtras(bundle)
         mContext.startActivity(intent)
+    }
+
+    override fun addSubCommentList(commentsList: MutableList<Comments>?, commentContent: CommentContent?) {
     }
 
 //    override fun onRefresh() {

@@ -8,6 +8,7 @@ import android.support.v7.app.AppCompatActivity
 import android.support.v7.widget.LinearLayoutManager
 import android.view.View
 import com.hackernews.reader.injection.Injection
+import com.hackernews.reader.rest.model.CommentContent
 import com.hackernews.reader.rest.model.Comments
 import com.hackernews.reader.rest.model.Story
 import com.hackernews.reader.ui.news.NewsCommentAdapter
@@ -19,14 +20,13 @@ import rx.schedulers.Schedulers
 import java.util.*
 
 
-class CommentActivity : AppCompatActivity(), NewsInterface.NewsView {
+class CommentActivity : AppCompatActivity(), NewsInterface.NewsView, NewsInterface.NewsCommentListener {
 
     private lateinit var mContext: Context
     private lateinit var mActivity: Activity
 
     private var mNewsCommentPresenter: NewsCommentPresenter? = null
-    private var mNewsStoriesAdapter: NewsCommentAdapter? = null
-    private val commentList = ArrayList<String>()
+    private var mNewsCommentAdapter: NewsCommentAdapter? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -36,16 +36,14 @@ class CommentActivity : AppCompatActivity(), NewsInterface.NewsView {
                 Schedulers.io(), AndroidSchedulers.mainThread())
         mNewsCommentPresenter?.attachView(this)
 
-        mNewsStoriesAdapter = NewsCommentAdapter(null, this, this)
+        mNewsCommentAdapter = NewsCommentAdapter(null, this, this)
         recyclerView.layoutManager = LinearLayoutManager(this)
-        recyclerView.adapter = mNewsStoriesAdapter?.asRecyclerAdapter()
+        recyclerView.adapter = mNewsCommentAdapter?.asRecyclerAdapter()
 
         handleShowPageIntent(intent)
 
 //        textview_error_message.setOnClickListener({
-//            commentList?.let {
-//                getComments(commentList)
-//            }
+//            getComments2()
 //        })
     }
 
@@ -61,8 +59,12 @@ class CommentActivity : AppCompatActivity(), NewsInterface.NewsView {
     }
 
     private fun getComments(commentIdList: ArrayList<String>) {
-//        val commentIdList = ArrayList(Arrays.asList("16007744", "16007987"))
         mNewsCommentPresenter?.getStoryComments(commentIdList)
+    }
+
+    private fun getComments2() {
+        val commentIdList = ArrayList(Arrays.asList("16044698", "16044525", "16045246"))
+        getComments(commentIdList)
     }
 
     override fun showNewsList(storyList: MutableList<Story>?) {
@@ -89,9 +91,17 @@ class CommentActivity : AppCompatActivity(), NewsInterface.NewsView {
     }
 
     override fun showCommentList(commentsList: MutableList<Comments>?) {
-        mNewsStoriesAdapter?.setItems(commentsList)
+        mNewsCommentAdapter?.setCommentList(commentsList)
     }
 
     override fun onStorySelected(commentList: MutableList<String>?) {
+    }
+
+    override fun onCommentClicked(commentList: MutableList<String>?, commentContent: CommentContent) {
+        mNewsCommentPresenter?.getSubComments(commentList, commentContent)
+    }
+
+    override fun addSubCommentList(commentsList: MutableList<Comments>?, commentContent: CommentContent?) {
+        mNewsCommentAdapter?.addSubComments(commentsList, commentContent)
     }
 }

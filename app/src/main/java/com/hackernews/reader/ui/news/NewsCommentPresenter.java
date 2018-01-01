@@ -1,6 +1,7 @@
 package com.hackernews.reader.ui.news;
 
 import com.hackernews.reader.rest.HackerRepository;
+import com.hackernews.reader.rest.model.CommentContent;
 import com.hackernews.reader.rest.model.Comments;
 import com.hackernews.reader.ui.base.GenericPresenter;
 
@@ -31,6 +32,10 @@ public class NewsCommentPresenter extends GenericPresenter<NewsInterface.NewsVie
                 .subscribe(new Subscriber<Comments>() {
                     @Override
                     public void onCompleted() {
+                        if (commentsList.size() >= total) {
+                            getView().hideLoading();
+                            getView().showCommentList(commentsList);
+                        }
                     }
 
                     @Override
@@ -42,10 +47,33 @@ public class NewsCommentPresenter extends GenericPresenter<NewsInterface.NewsVie
                     @Override
                     public void onNext(Comments comments) {
                         commentsList.add(comments);
+                    }
+                }));
+    }
+
+    private void addSubCommentSubscription(String commentId, final List<Comments> commentsList,
+                                           final int total, final CommentContent commentContent) {
+        addSubscription(hackerRepository.getHackerComment(commentId)
+                .subscribeOn(ioScheduler)
+                .observeOn(mainScheduler)
+                .subscribe(new Subscriber<Comments>() {
+                    @Override
+                    public void onCompleted() {
                         if (commentsList.size() >= total) {
                             getView().hideLoading();
-                            getView().showCommentList(commentsList);
+                            getView().addSubCommentList(commentsList, commentContent);
                         }
+                    }
+
+                    @Override
+                    public void onError(Throwable throwable) {
+                        getView().hideLoading();
+                        getView().showError(throwable.getMessage());
+                    }
+
+                    @Override
+                    public void onNext(Comments comments) {
+                        commentsList.add(comments);
                     }
                 }));
     }
@@ -56,7 +84,16 @@ public class NewsCommentPresenter extends GenericPresenter<NewsInterface.NewsVie
         getView().showLoading();
         List<Comments> commentList = new ArrayList<>();
         for (String commentId : commentIdList) {
-            addSingleCommentSubscription(commentId, commentList, commentList.size());
+            addSingleCommentSubscription(commentId, commentList, commentIdList.size());
+        }
+    }
+
+    @Override
+    public void getSubComments(List<String> commentIdList, CommentContent commentContent) {
+        checkViewAttached();
+        List<Comments> commentList = new ArrayList<>();
+        for (String commentId : commentIdList) {
+            addSubCommentSubscription(commentId, commentList, commentIdList.size(), commentContent);
         }
     }
 }
