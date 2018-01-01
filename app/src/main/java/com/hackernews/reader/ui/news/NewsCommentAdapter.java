@@ -1,9 +1,12 @@
 package com.hackernews.reader.ui.news;
 
 import android.content.Context;
+import android.support.v7.widget.RecyclerView;
+import android.text.Html;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.hackernews.reader.R;
@@ -60,27 +63,27 @@ public class NewsCommentAdapter extends PreOrderTreeAdapter<CommentContent,
 
     @Override
     protected int getViewType(CommentContent commentContent, int depth) {
-        return 0;
+        return depth;
     }
 
     @Override
     protected NewsCommentHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         View view = LayoutInflater.from(parent.getContext())
                 .inflate(R.layout.list_item_comments, parent, false);
-        return new NewsCommentHolder(view);
+        return new NewsCommentHolder(view, viewType);
     }
 
     @Override
     protected void onBindViewHolder(NewsCommentHolder holder, final CommentContent commentContent) {
         final Comments comments = commentContent.getContent();
         if (comments != null) {
-            holder.textview_comment_details.setText(comments.getText());
+            holder.textview_comment_details.setText(Html.fromHtml(comments.getText()));
 //            holder.textview_comment_time.setText(comments.getTime());
             holder.textview_comment_username.setText(comments.getBy());
             holder.itemView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    if (listener != null) {
+                    if (commentContent.subContentSize() == 0 && listener != null) {
                         List<String> commentList = comments.getKids();
                         if (commentList != null && commentList.size() > 0) {
                             listener.onCommentClicked(commentList, commentContent);
@@ -119,13 +122,21 @@ public class NewsCommentAdapter extends PreOrderTreeAdapter<CommentContent,
         final TextView textview_comment_username;
         final TextView textview_comment_time;
         final TextView textview_comment_details;
+        final LinearLayout main_layout;
 
-        public NewsCommentHolder(View itemView) {
+        public NewsCommentHolder(View itemView, int depth) {
             super(itemView);
             this.itemView = itemView;
             textview_comment_username = (TextView) itemView.findViewById(R.id.textview_comment_username);
             textview_comment_time = (TextView) itemView.findViewById(R.id.textview_comment_time);
             textview_comment_details = (TextView) itemView.findViewById(R.id.textview_comment_details);
+            main_layout = (LinearLayout) itemView.findViewById(R.id.main_layout);
+
+            if (depth > 1) {
+                RecyclerView.LayoutParams main_layout_params = (RecyclerView.LayoutParams) main_layout.getLayoutParams();
+                main_layout_params.setMargins(main_layout_params.leftMargin + 50 * (depth - 1), main_layout_params.topMargin,
+                        main_layout_params.rightMargin, main_layout_params.bottomMargin);
+            }
         }
     }
 }
