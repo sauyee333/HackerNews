@@ -18,9 +18,9 @@ import java.util.List;
 public class NewsStoryAdapter extends RecyclerView.Adapter<NewsStoryHolder> {
     private List<Story> items;
     private final Context context;
-    private NewsInterface.NewsView listener;
+    private NewsInterface.NewsStoryListener listener;
 
-    public NewsStoryAdapter(List<Story> items, Context context, NewsInterface.NewsView listener) {
+    public NewsStoryAdapter(List<Story> items, Context context, NewsInterface.NewsStoryListener listener) {
         this.items = items;
         this.context = context;
         this.listener = listener;

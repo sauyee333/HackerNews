@@ -1,4 +1,4 @@
-package com.hackernews.reader
+package com.hackernews.reader.ui.activities
 
 import android.app.Activity
 import android.content.Context
@@ -7,6 +7,7 @@ import android.os.Bundle
 import android.support.v7.app.AppCompatActivity
 import android.support.v7.widget.LinearLayoutManager
 import android.view.View
+import com.hackernews.reader.R
 import com.hackernews.reader.injection.Injection
 import com.hackernews.reader.rest.model.CommentContent
 import com.hackernews.reader.rest.model.Comments
@@ -92,9 +93,6 @@ class CommentActivity : AppCompatActivity(), NewsInterface.NewsView, NewsInterfa
 
     override fun showCommentList(commentsList: MutableList<Comments>?) {
         mNewsCommentAdapter?.setCommentList(commentsList)
-    }
-
-    override fun onStorySelected(commentList: MutableList<String>?) {
     }
 
     override fun onCommentClicked(commentList: MutableList<String>?, commentContent: CommentContent) {

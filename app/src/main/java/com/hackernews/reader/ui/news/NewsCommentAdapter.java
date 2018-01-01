@@ -3,6 +3,7 @@ package com.hackernews.reader.ui.news;
 import android.content.Context;
 import android.support.v7.widget.RecyclerView;
 import android.text.Html;
+import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -75,22 +76,28 @@ public class NewsCommentAdapter extends PreOrderTreeAdapter<CommentContent,
 
     @Override
     protected void onBindViewHolder(NewsCommentHolder holder, final CommentContent commentContent) {
-        final Comments comments = commentContent.getContent();
-        if (comments != null) {
-            holder.textview_comment_details.setText(Html.fromHtml(comments.getText()));
-//            holder.textview_comment_time.setText(comments.getTime());
-            holder.textview_comment_username.setText(comments.getBy());
-            holder.itemView.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    if (commentContent.subContentSize() == 0 && listener != null) {
-                        List<String> commentList = comments.getKids();
-                        if (commentList != null && commentList.size() > 0) {
-                            listener.onCommentClicked(commentList, commentContent);
+        if(commentContent != null) {
+            final Comments comments = commentContent.getContent();
+            if (comments != null) {
+                if (!TextUtils.isEmpty(comments.getText())) {
+                    holder.textview_comment_details.setText(Html.fromHtml(comments.getText()));
+                }
+                //            holder.textview_comment_time.setText(comments.getTime());
+                if (!TextUtils.isEmpty(comments.getBy())) {
+                    holder.textview_comment_username.setText(comments.getBy());
+                }
+                holder.itemView.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        if (commentContent.subContentSize() == 0 && listener != null) {
+                            List<String> commentList = comments.getKids();
+                            if (commentList != null && commentList.size() > 0) {
+                                listener.onCommentClicked(commentList, commentContent);
+                            }
                         }
                     }
-                }
-            });
+                });
+            }
         }
     }
 

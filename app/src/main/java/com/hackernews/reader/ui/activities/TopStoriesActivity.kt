@@ -1,4 +1,4 @@
-package com.hackernews.reader
+package com.hackernews.reader.ui.activities
 
 import android.app.Activity
 import android.content.Context
@@ -7,6 +7,7 @@ import android.os.Bundle
 import android.support.v7.app.AppCompatActivity
 import android.support.v7.widget.LinearLayoutManager
 import android.view.View
+import com.hackernews.reader.R
 import com.hackernews.reader.injection.Injection
 import com.hackernews.reader.rest.model.CommentContent
 import com.hackernews.reader.rest.model.Comments
@@ -16,21 +17,19 @@ import com.hackernews.reader.ui.news.NewsStoryAdapter
 import com.hackernews.reader.ui.news.NewsStoryPresenter
 import kotlinx.android.synthetic.main.activity_main.*
 import rx.Subscriber
-import rx.Subscription
 import rx.android.schedulers.AndroidSchedulers
 import rx.schedulers.Schedulers
 import rx.subscriptions.CompositeSubscription
 import java.util.*
 
 
-//class MainActivity : AppCompatActivity(), NewsInterface.NewsView, SwipeRefreshLayout.OnRefreshListener {
-class MainActivity : AppCompatActivity(), NewsInterface.NewsView {
+//class TopStoriesActivity : AppCompatActivity(), NewsInterface.NewsView, SwipeRefreshLayout.OnRefreshListener {
+class TopStoriesActivity : AppCompatActivity(), NewsInterface.NewsView, NewsInterface.NewsStoryListener {
 
     private lateinit var mContext: Context
     private lateinit var mActivity: Activity
 
     private val mCompositeSubscription = CompositeSubscription()
-    private var mGetStorySub: Subscription? = null
     private var mNewsPresenter: NewsInterface.StoryPresenter? = null
     private var mNewsStoriesAdapter: NewsStoryAdapter? = null
 
@@ -101,23 +100,6 @@ class MainActivity : AppCompatActivity(), NewsInterface.NewsView {
                     }
                 });
     }
-
-//    private fun getStory() {
-//        Injection.provideHackerRepository().showHackerStory()
-//                .subscribeOn(Schedulers.io())
-//                .observeOn(AndroidSchedulers.mainThread())
-//                .subscribe(object : Subscriber<List<Story>>() {
-//                    override fun onCompleted() {
-//                    }
-//
-//                    override fun onError(e: Throwable) {
-//                        e.printStackTrace()
-//                    }
-//
-//                    override fun onNext(storyList: List<Story>) {
-//                    }
-//                });
-//    }
 
     override fun showNewsList(storyList: MutableList<Story>?) {
         recyclerView.visibility = View.VISIBLE

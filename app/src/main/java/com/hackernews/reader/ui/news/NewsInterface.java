@@ -25,7 +25,9 @@ public class NewsInterface {
         void showCommentList(List<Comments> commentsList);
 
         void addSubCommentList(List<Comments> commentsList, CommentContent commentContent);
+    }
 
+    public interface NewsStoryListener {
         void onStorySelected(List<String> commentList);
     }
 
