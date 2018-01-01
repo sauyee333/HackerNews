@@ -75,41 +75,10 @@ public class NewsStoryPresenter extends GenericPresenter<NewsInterface.NewsView>
                 }));
     }
 
-    private void addHackerNewsSubscription() {
-        final List<Story> stories = new ArrayList<>();
-
-        addSubscription(hackerRepository.showHackerStory()
-                .subscribeOn(ioScheduler)
-                .observeOn(mainScheduler)
-                .subscribe(new Subscriber<List<Story>>() {
-                    @Override
-                    public void onCompleted() {
-                        getView().hideLoading();
-                        if (stories.size() > 0) {
-                            getView().showNewsList(stories);
-                        }
-                    }
-
-                    @Override
-                    public void onError(Throwable throwable) {
-                        getView().hideLoading();
-                        getView().showError(throwable.getMessage());
-                    }
-
-                    @Override
-                    public void onNext(List<Story> storyList) {
-                        if (storyList != null && storyList.size() > 0) {
-                            stories.add(storyList.get(0));
-                        }
-                    }
-                }));
-    }
-
     @Override
     public void getTopStories() {
         checkViewAttached();
         getView().showLoading();
         addTopStoriesSubscription();
-//        addHackerNewsSubscription();
     }
 }

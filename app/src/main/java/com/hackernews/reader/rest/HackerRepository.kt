@@ -8,8 +8,6 @@ import rx.Observable
  * Created by sauyee on 26/12/17.
  */
 interface HackerRepository {
-    fun showHackerStory(): Observable<List<Story>>
-
     fun getHackerTopStories(): Observable<List<String>>
     fun getHackerStory(story: String): Observable<Story>
     fun getHackerComment(commentId: String): Observable<Comments>
