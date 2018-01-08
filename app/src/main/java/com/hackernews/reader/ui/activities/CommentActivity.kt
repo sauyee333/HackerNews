@@ -42,10 +42,6 @@ class CommentActivity : AppCompatActivity(), NewsInterface.NewsView, NewsInterfa
         recyclerView.adapter = mNewsCommentAdapter?.asRecyclerAdapter()
 
         handleShowPageIntent(intent)
-
-//        textview_error_message.setOnClickListener({
-//            getComments2()
-//        })
     }
 
     override fun onDestroy() {
@@ -79,21 +75,21 @@ class CommentActivity : AppCompatActivity(), NewsInterface.NewsView, NewsInterfa
     override fun showError(message: String?) {
         recyclerView.visibility = View.GONE
         message?.let {
-//            textview_error_message.setText(it)
-//            textview_error_message.visibility = View.VISIBLE
+            textview_error_message.setText(it)
+            textview_error_message.visibility = View.VISIBLE
         }
     }
 
     override fun showLoading() {
-//        progress_bar.visibility = View.VISIBLE
+        progress_bar.visibility = View.VISIBLE
         recyclerView.visibility = View.GONE
-//        textview_error_message.visibility = View.GONE
+        textview_error_message.visibility = View.GONE
     }
 
     override fun hideLoading() {
-//        progress_bar.visibility = View.GONE
+        progress_bar.visibility = View.GONE
         recyclerView.visibility = View.VISIBLE
-//        textview_error_message.visibility = View.GONE
+        textview_error_message.visibility = View.GONE
     }
 
     override fun showCommentList(commentsList: MutableList<Comments>?) {

@@ -12,4 +12,17 @@
         android:layout_height="wrap_content"
         app:layout_behavior="@string/appbar_scrolling_view_behavior"
         tools:listitem="@layout/list_item_stories" />
+
+    <TextView
+        android:id="@+id/textview_error_message"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        tools:text="Connection Error" />
+
+    <ProgressBar
+        android:id="@+id/progress_bar"
+        style="@style/Widget.AppCompat.ProgressBar"
+        android:layout_width="60dp"
+        android:layout_height="60dp"
+        android:visibility="gone" />
 </RelativeLayout>
