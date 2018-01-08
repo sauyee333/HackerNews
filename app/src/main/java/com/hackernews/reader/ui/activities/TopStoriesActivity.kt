@@ -4,8 +4,10 @@ import android.app.Activity
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
+import android.support.v4.widget.SwipeRefreshLayout
 import android.support.v7.app.AppCompatActivity
 import android.support.v7.widget.LinearLayoutManager
+import android.util.Log
 import android.view.View
 import com.hackernews.reader.R
 import com.hackernews.reader.injection.Injection
@@ -15,11 +17,9 @@ import com.hackernews.reader.rest.model.Story
 import com.hackernews.reader.ui.news.NewsInterface
 import com.hackernews.reader.ui.news.NewsStoryAdapter
 import com.hackernews.reader.ui.news.NewsStoryPresenter
-import kotlinx.android.synthetic.main.activity_main.*
-import rx.Subscriber
+import kotlinx.android.synthetic.main.activity_top_story.*
 import rx.android.schedulers.AndroidSchedulers
 import rx.schedulers.Schedulers
-import rx.subscriptions.CompositeSubscription
 import java.util.*
 
 
@@ -29,13 +29,12 @@ class TopStoriesActivity : AppCompatActivity(), NewsInterface.NewsView, NewsInte
     private lateinit var mContext: Context
     private lateinit var mActivity: Activity
 
-    private val mCompositeSubscription = CompositeSubscription()
     private var mNewsPresenter: NewsInterface.StoryPresenter? = null
     private var mNewsStoriesAdapter: NewsStoryAdapter? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_main)
+        setContentView(R.layout.activity_top_story)
         mContext = this
 
         mNewsPresenter = NewsStoryPresenter(Injection.provideHackerRepository(),
@@ -46,85 +45,67 @@ class TopStoriesActivity : AppCompatActivity(), NewsInterface.NewsView, NewsInte
         recyclerView.layoutManager = LinearLayoutManager(this)
         recyclerView.adapter = mNewsStoriesAdapter
 
-        textview_error_message.setOnClickListener({
-            getTopStories()
-        })
+        _Debug("going to setup refresh")
+        setupRefresh()
+
+        _Debug("calling getTopStories in oncreate")
+        getTopStories()
+//        textview_error_message.setOnClickListener({
+//            getTopStories()
+//        })
     }
 
     override fun onDestroy() {
-        if (!mCompositeSubscription.isUnsubscribed) {
-            mCompositeSubscription.unsubscribe()
-        }
         super.onDestroy()
+        mNewsPresenter?.detachView()
+    }
+
+    private fun setupRefresh() {
+        _Debug("3. setupRefresh ggggggggg")
+        swipe_refresh_layout.setOnRefreshListener {
+            SwipeRefreshLayout.OnRefreshListener {
+                _Debug("3. on refresh nnnnnnnn")
+                swipe_refresh_layout.setRefreshing(true)
+                getTopStories()
+            }
+        }
     }
 
     private fun getTopStories() {
+        _Debug("calling geet top story")
         mNewsPresenter?.getTopStories()
-    }
-
-    private fun getTopStories2() {
-        Injection.provideHackerRepository().getHackerTopStories()
-                .subscribeOn(Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(object : Subscriber<List<String>>() {
-                    override fun onCompleted() {
-                    }
-
-                    override fun onError(e: Throwable) {
-                        e.printStackTrace()
-                    }
-
-                    override fun onNext(storyList: List<String>) {
-                        for (storyId in storyList) {
-                            getStoryDetails(storyId)
-                        }
-                    }
-                });
-    }
-
-    private fun getStoryDetails(story: String) {
-        Injection.provideHackerRepository().getHackerStory(story)
-                .subscribeOn(Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(object : Subscriber<Story>() {
-                    override fun onCompleted() {
-                    }
-
-                    override fun onError(e: Throwable) {
-                        e.printStackTrace()
-                    }
-
-                    override fun onNext(story: Story) {
-//                        _Debug("getStoryDetails")
-//                        _Debug("story: " + story.toString())
-                    }
-                });
     }
 
     override fun showNewsList(storyList: MutableList<Story>?) {
         recyclerView.visibility = View.VISIBLE
-        textview_error_message.visibility = View.GONE
+//        textview_error_message.visibility = View.GONE
         mNewsStoriesAdapter?.setItems(storyList)
+
+//        swipe_refresh_layout.setRefreshing(false)
+//                swipe_refresh_layout
     }
 
     override fun showError(message: String?) {
         recyclerView.visibility = View.GONE
         message?.let {
-            textview_error_message.setText(it)
-            textview_error_message.visibility = View.VISIBLE
+            //            textview_error_message.setText(it)
+//            textview_error_message.visibility = View.VISIBLE
         }
+
+//        swipe_refresh_layout.setRefreshing(false)
+//                swipe_refresh_layout
     }
 
     override fun showLoading() {
-        progress_bar.visibility = View.VISIBLE
+//        progress_bar.visibility = View.VISIBLE
         recyclerView.visibility = View.GONE
-        textview_error_message.visibility = View.GONE
+//        textview_error_message.visibility = View.GONE
     }
 
     override fun hideLoading() {
-        progress_bar.visibility = View.GONE
+//        progress_bar.visibility = View.GONE
         recyclerView.visibility = View.VISIBLE
-        textview_error_message.visibility = View.GONE
+//        textview_error_message.visibility = View.GONE
     }
 
     override fun showCommentList(commentsList: MutableList<Comments>?) {
@@ -146,7 +127,11 @@ class TopStoriesActivity : AppCompatActivity(), NewsInterface.NewsView, NewsInte
     }
 
 //    override fun onRefresh() {
-//        _Debug("onRefresh ---")
+//        _Debug("onRefresh")
 //        getTopStories()
 //    }
+
+    private fun _Debug(str: String) {
+        Log.d("widget", "$str")
+    }
 }

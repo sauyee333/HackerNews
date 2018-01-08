@@ -1,4 +1,4 @@
-package com.hackernews.reader.ui.news;
+package com.hackernews.reader.ui.comments;
 
 import android.content.Context;
 import android.support.v7.widget.RecyclerView;
@@ -13,6 +13,7 @@ import android.widget.TextView;
 import com.hackernews.reader.R;
 import com.hackernews.reader.rest.model.CommentContent;
 import com.hackernews.reader.rest.model.Comments;
+import com.hackernews.reader.ui.news.NewsInterface;
 
 import java.util.List;
 

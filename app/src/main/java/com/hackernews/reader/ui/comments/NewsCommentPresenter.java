@@ -1,9 +1,10 @@
-package com.hackernews.reader.ui.news;
+package com.hackernews.reader.ui.comments;
 
 import com.hackernews.reader.rest.HackerRepository;
 import com.hackernews.reader.rest.model.CommentContent;
 import com.hackernews.reader.rest.model.Comments;
 import com.hackernews.reader.ui.base.GenericPresenter;
+import com.hackernews.reader.ui.news.NewsInterface;
 
 import java.util.ArrayList;
 import java.util.List;
